@@ -22,8 +22,11 @@ const mapa = require('./routes/mapa');
 
 var app = express();
 
+//database mongo online
+var dotenv = require('dotenv').config();
+
 const database = require('./config/database');
-database('mongodb://localhost:27017/vampire_db');
+database(process.env.MONGOLAB_URI);
 
 const cors = require('cors');
 app.use(cors());

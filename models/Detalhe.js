@@ -35,7 +35,8 @@ const schema = mongoose.Schema({
         type: String
     },
     pontos_experiencia:{
-        type: Number
+        type: Number,
+        default: 0
     }    
 });
 

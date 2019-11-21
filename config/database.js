@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'); //assim o node sabe que tem que procurar o pacote na pasta node_modules
 //variavel const é atribuida apenas uma vez e seu valor nao muda
+var dotenv = require('dotenv').config();
 
 //URI = Universal Resource Identifier
 module.exports = function(uri){
@@ -8,11 +9,11 @@ module.exports = function(uri){
     mongoose.set('useFindAndModify', false);
 
     mongoose.connection.on('connected', function(){
-        console.log('* Mongoose! conectado a ' + uri);
+        console.log('* Mongoose! conectado');
     });
 
     mongoose.connection.on('disconnected', function(){
-        console.log('* Mongoose! desconectado de ' + uri);
+        console.log('* Mongoose! desconectado');
     });
 
     mongoose.connection.on('error', function(error){
