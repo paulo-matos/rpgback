@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>Crônicas do Mundo das Trevas</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel="shortcut icon" href="images/favicon.ico" />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #fadeout {
+            /* position: relative;
+            padding-top: 20px; */
+            opacity: 1;
+            transition: 1s opacity;
+            text-align: center;
+            font-size: 36px;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            color: white;
+        }
+
+        #logo {
+            height: 690px;
+            left: 50%;
+            margin-top: -375px;
+            margin-left: -480px;
+            position: absolute;
+            top: 50%;
+            width: 908px;
+        }
+
+        #floating-logo {
+            position: absolute;
+            z-index: 4;
+            top: 10px;
+            left: 10px;
+        }
+
+        #relogio {
+            position: relative;
+            transition: ease-in-out;
+            width: 100%;
+            z-index: 3;
+            visibility: hidden;
+            text-align: center;
+            margin-top: 5%;
+        }
+
+        .horario {
+            color: #ebebe8;
+            font-family: 'Georgia';
+            font-size: xx-large;
+            position: absolute;
+            top: 40%;
+            left: 46.5%;
+        }
+        h3 {
+            margin-bottom: 0px;
+        }
+        h5 {
+            margin-top: 5px;
+            margin-bottom: 0px;
+        }
+        h6 {
+            margin: 0px;
+        }
+
+        .mapboxgl-ctrl-bottom-right {
+            display: none !important;
+        }
+
+        .mapboxgl-ctrl-logo {
+            display: none !important;
+        }
+
+        .mapboxgl-popup {
+            max-width: 25%;
+            font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            color: #420808;
+        }
+
+        .mapboxgl-popup-content {
+            background: #7e1919 !important;
+        }
+
+        h1 {
+            color: rgb(231, 231, 231);
+            margin: auto !important;
+        }
+
+        .marker {
+            display: block;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            width: 10%;
+            height: 15%;
+        }
+
+        .mapboxgl-ctrl-geocoder {
+            opacity: 0.5;
+            display: block;
+        }
+
+        .interface {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id='map'></div>
+
+    <!-- Código Fade Início-->
+    <div id="fadeout"><img id="logo" src="https://raw.githubusercontent.com/paulo-matos/teste/master/vamp_logo.png">
+    </div>
+    <script>
+        //incluir #fadeout em css
+        window.onload = function () {
+            window.setTimeout(fadeout, 3000); //3 segundos
+            window.setTimeout(removeFade, 6000);
+            window.setTimeout(irPraIrlanda, 7000);
+        }
+        function fadeout() {
+            document.getElementById('fadeout').style.opacity = '0';
+        }
+        function removeFade() {
+            document.getElementById('fadeout').style.display = 'none';
+        }
+
+
+    </script>
+    <!-- Código Fade Final-->
+
+    <div class="interface" id='floating-logo'>
+        <a onclick='mostraRelogio()'><img src="https://github.com/paulo-matos/teste/raw/master/cross_icon.png"
+                width="50"></a>
+    </div>
+    <div id='relogio' class="interface">
+        <img src="images/relogio.png" width="30%">
+        <div class="horario">
+            <h3><span id="hora">01</span>:<span id="minutos">00</span></h3>
+            <h5><span id="dia">25</span>/<span id="mes">08</span></h5>
+            <h6><span id="ano">2019</span></h6>
+        </div>
+    </div>
+    <script
+        src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.min.js'></script>
+    <link rel='stylesheet'
+        href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.css'
+        type='text/css' />
+
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoicGF1bG9tYXRvcyIsImEiOiJjanJ3Y2xkZW0wYmVmNDVvNHplMjZyd2RvIn0.kuLoh-U_PQNlP3OZtEKzZw';
+
+
+        var map = new mapboxgl.Map({
+            container: 'map', // container id
+            style: 'mapbox://styles/paulomatos/cjzjmy3no3ylf1cpgncwhpe6s', //hosted style id
+            center: [0, 50], // starting position
+            zoom: 1, // starting zoom
+            antialias: true
+        });
+
+
+        map.on('load', function () {
+            // Insert the layer beneath any symbol layer.
+            var layers = map.getStyle().layers;
+
+            var labelLayerId;
+            for (var i = 0; i < layers.length; i++) {
+                if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+                    labelLayerId = layers[i].id;
+                    break;
+                }
+            }
+
+            map.addLayer({
+                'id': '3d-buildings',
+                'source': 'composite',
+                'source-layer': 'building',
+                'filter': ['==', 'extrude', 'true'],
+                'type': 'fill-extrusion',
+                'minzoom': 15,
+                'paint': {
+                    'fill-extrusion-color': '#000000',
+
+                    // use an 'interpolate' expression to add a smooth transition effect to the
+                    // buildings as the user zooms in
+                    'fill-extrusion-height': [
+                        "interpolate", ["linear"], ["zoom"],
+                        15, 0,
+                        15.05, ["get", "height"]
+                    ],
+                    'fill-extrusion-base': [
+                        "interpolate", ["linear"], ["zoom"],
+                        15, 0,
+                        15.05, ["get", "min_height"]
+                    ],
+                    'fill-extrusion-opacity': .3
+                },
+            }, labelLayerId);
+
+            //adicionando simbolos
+            map.loadImage('https://raw.githubusercontent.com/paulo-matos/teste/master/icones/setita.png', function (error, image) {
+                if (error) throw error;
+                map.addImage('setita', image);
+            });
+            map.loadImage('https://raw.githubusercontent.com/paulo-matos/teste/master/icones/refugio.png', function (error, image) {
+                if (error) throw error;
+                map.addImage('refugio', image);
+            });
+            map.loadImage('https://raw.githubusercontent.com/paulo-matos/teste/master/icones/dominio.png', function (error, image) {
+                if (error) throw error;
+                map.addImage('dominio', image);
+            });
+
+            //adicionar os icones pra uma fonte 
+            var lugaresImportantes = [{
+                "type": "Feature",
+                "properties": {
+                    "title": "Elysium",
+                    "description":
+                        "<div><table cellpadding='7'><tr><td width='20%'><img src='https://raw.githubusercontent.com/paulo-matos/teste/master/icones/camarilla.png' width='90%'></td><td width='80%'><center><h1>Elysium</h1><hr></center><h2>O ponto de encontro dos vampiros da Camarilla na cidade</h2></td></tr></table></div>"
+                },
+                "place_name": "Elysium, Camarilla, Irlanda",
+                "place_type": ["place"],
+                "center": [-6.266131103038787, 53.34431314180411],
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-6.266131103038787,
+                        53.34431314180411]
+                }
+            }, {
+                "type": "Feature",
+                "properties": {
+                    "title": "Dominio",
+                    "description":
+                        "<div><table cellpadding='7'><tr><td width='30%'><img src='https://raw.githubusercontent.com/paulo-matos/teste/master/icones/dominio.png' width='90%'></td><td width='70%'><center><h1>Domínio</h1><hr></center><h2>Cherry Orchard Hospital.</h2><h3>Este é o seu domínio. Foi lhe permitido se alimentar aqui e em seus arredores. Entretanto, cuidado com a quebra da máscara.</h3></td></tr></table></div>"
+                },
+                "place_name": "Hospital, Domínio, Dublin",
+                "center": [-6.377263069152832, 53.34309614264126],
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-6.377263069152832, 53.34309614264126]
+                }
+            }, {
+                "type": "Feature",
+                "properties": {
+                    "title": "Refugio",
+                    "description":
+                        "<div><table cellpadding='7'><tr><td width='30%'><img src='https://raw.githubusercontent.com/paulo-matos/teste/master/icones/refugio.png' width='90%'></td><td width='70%'><center><h1>Refúgio</h1><hr></center><h2>Apartamento Esme.</h2><h3>Este é o seu refúgio. O luxuoso apartamento fica na cobertura e cada um tem seu próprio quarto.</h3></td></tr></table></div>"
+                },
+                "place_name": "Apartamento, Refugio, Dublin",
+                "center": [-6.356996297836304, 53.347477177067546],
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-6.356996297836304, 53.347477177067546]
+                }
+            }, {
+                "type": "Feature",
+                "properties": {
+                    "title": "Amon",
+                    "description":
+                        "<div><table cellpadding='7'><tr><td width='30%'><img src='https://raw.githubusercontent.com/paulo-matos/teste/master/icones/setita.png' width='90%'></td><td width='70%'><center><h1>Amon Saret</h1><hr></center><h2>Setita - Negociante.</h2></td></tr></table></div>"
+                },
+                "place_name": "Amon Saret, Setita, Irlanda",
+                "center": [-6.170019507408142, 53.263600618593514],
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [-6.170019507408142,
+                        53.263600618593514]
+                }
+            }];
+
+
+            map.loadImage('https://raw.githubusercontent.com/paulo-matos/teste/master/icones/camarilla.png', function (error, image) {
+                if (error) throw error;
+
+                map.addImage('camarilla', image);
+                map.addLayer({
+                    "id": "places",
+                    "type": "symbol",
+                    "source": {
+                        "type": "geojson",
+                        "data": {
+                            "type": "FeatureCollection",
+                            "features": lugaresImportantes
+                        },
+                    },
+                    "layout": {
+                        "icon-image": [
+                            'match',
+                            ['get', 'title'],
+                            'Elysium', 'camarilla',
+                            'Amon', 'setita',
+                            'Dominio', 'dominio',
+                            'Refugio', 'refugio',
+              /* other */ '#331311'
+                        ],
+                        "icon-size": 0.19
+                    },
+                    'minzoom': 12,
+                    'draggable': 'true'
+                });
+            });
+            //fim teste2
+
+
+            // When a click event occurs on a feature in the places layer, open a popup at the
+            // location of the feature, with description HTML from its properties.
+            map.on('click', 'places', function (e) {
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                var description = e.features[0].properties.description;
+
+                // Ensure that if the map is zoomed out such that multiple
+                // copies of the feature are visible, the popup appears
+                // over the copy being pointed to.
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+
+                new mapboxgl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(description)
+                    .addTo(map);
+            });
+
+            // Change the cursor to a pointer when the mouse is over the places layer.
+            map.on('mouseenter', 'places', function () {
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            // Change it back to a pointer when it leaves.
+            map.on('mouseleave', 'places', function () {
+                map.getCanvas().style.cursor = '';
+            });
+
+
+        });
+
+
+
+        function irPraIrlanda() {
+            map.flyTo({ center: [-6.28, 53.35], zoom: 11.5, pitch: 0, bearing: 0 });
+        }
+
+        function toggleInterface() {
+            var pesquisa = document.getElementsByClassName('mapboxgl-ctrl-geocoder');
+            //var iconeTop = document.getElementById('floating-logo');
+            var interface = document.getElementsByClassName('interface');
+            //alert(pesquisa[0].style.display);
+            if (pesquisa[0].style.display == 'block') {
+                pesquisa[0].style.display = 'none';
+                //iconeTop.style.display = 'none';
+                for (var i = 0;i < interface.length;i++){
+                    interface[i].style.display = 'none';
+                }
+            } else {
+                pesquisa[0].style.display = 'block';
+                //iconeTop.style.display = 'block';
+                for (var i = 0;i < interface.length;i++){
+                    interface[i].style.display = 'block';
+                }
+            }
+        }
+
+        function mostraRelogio() {
+            //alert("funciona");
+            var relogio = document.getElementById('relogio');
+            if (relogio.style.visibility == 'hidden') {
+                relogio.style.visibility = 'visible';
+            } else {
+                relogio.style.visibility = 'hidden';
+            }
+        }
+
+        //Apertar " para voltar o mapa à posição inicial
+        document.onkeydown = function (evt) {
+            evt = evt || window.event;
+            if (evt.keyCode == 192) {
+                irPraIrlanda();
+            } else if (evt.keyCode == 27) { //apertar ESC
+                toggleInterface();
+            }
+        };
+
+
+
+        //Search Bar
+        map.addControl(new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            placeholder: "Perdido, Neófito?",
+            countries: 'ie',
+            id: 'barraPesquisa'
+        }));
+
+
+
+// "title": "Elysium",
+// "description": "O ponto de encontro dos vampiros da Camarila na cidade"
+//"coordinates": [-6.266051, 53.344259] Elysium
+
+//https://whitewolf.fandom.com/wiki/Vampire:_The_Masquerade_symbols Simbolos clãs
+    </script>
+
+</body>
+
+</html>
