@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema({
+    identificador:{
+        type: String
+    },
     academicos:{
         type: Number
     },

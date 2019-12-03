@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const schema = mongoose.Schema({
+    identificador:{
+        type: String
+    },
     fis_forca: {
         type: Number,
         default: 1
