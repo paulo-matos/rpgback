@@ -1,4 +1,6 @@
 const Atributo = require('../models/Atributo');
+const Ficha = require('../models/Ficha');
+const Detalhe = require('../models/Detalhe');
 
 const controller = {};
 
@@ -34,6 +36,23 @@ controller.obterUm = async function (req, res) {
             res.sendStatus(404).end();
             //se a quantidade de posições for diferente ou tiver algum valor fora de hexadecimal ele retorna erro 500
         }
+    } catch (erro) {
+        console.error(erro);
+        res.sendStatus(500).end();
+    }
+}
+
+controller.obterNome = async function (req, res) {
+    const id = req.params.id;
+    try {
+        const fichas = await Ficha.find();
+        for (let i=0;i<fichas.length;i++){
+            if ((fichas[i].atributo == id) || (fichas[i].detalhe == id)) { //procura na variável atributo de cada ficha se o id é encontrado e então retorna a ficha correta
+                res.send(fichas[i]);
+            } else { //ficha não encontrada = variável vazia
+                res.sendStatus(404).end();
+            }
+        }        
     } catch (erro) {
         console.error(erro);
         res.sendStatus(500).end();
