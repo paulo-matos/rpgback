@@ -1,6 +1,6 @@
 const express = require('express'); //express fornece o roteador que é necessário
 const router = express.Router();
-const controller = require('../controllers/pericia');
+const controller = require('../controllers/usuario');
 
 router.post('/',controller.novo);
 router.get('/',controller.listar);

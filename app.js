@@ -9,16 +9,15 @@ var usersRouter = require('./routes/users');
 
 //********* criar variável com a rota *********
 const ficha = require('./routes/ficha');
-const atributo = require('./routes/atributo');
-const habilidade = require('./routes/habilidade');
-const talento = require('./routes/talento');
-const pericia = require('./routes/pericia');
-const conhecimento = require('./routes/conhecimento');
-const detalhe = require('./routes/detalhe');
-
-//********* Views *********
+const icone = require('./routes/icone');
 const livro = require('./routes/livro');
 const mapa = require('./routes/mapa');
+const usuario = require('./routes/usuario');
+
+
+//********* Views *********
+//const livro = require('./routes/livro');
+//const mapa = require('./routes/mapa');
 
 var app = express();
 
@@ -47,16 +46,15 @@ app.use(express.static('./public'));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/ficha', ficha);
-app.use('/atributo', atributo);
-app.use('/habilidade', habilidade);
-app.use('/talento', talento);
-app.use('/pericia', pericia);
-app.use('/conhecimento', conhecimento);
-app.use('/detalhe', detalhe);
-
-//********* Views *********
+app.use('/icone', icone);
 app.use('/livro', livro);
 app.use('/mapa', mapa);
+app.use('/usuario', usuario);
+
+
+//********* Views *********
+//app.use('/livro', livro);
+//app.use('/mapa', mapa);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

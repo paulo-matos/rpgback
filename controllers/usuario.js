@@ -1,10 +1,10 @@
-const Conhecimento = require('../models/Conhecimento');
+const Usuario = require('../models/Usuario');
 
 const controller = {};
 
 controller.novo = async function (req, res) {
     try {
-        await Conhecimento.create(req.body);
+        await Usuario.create(req.body);
         // HTTP 201: Created - conseguiu criar nova entrada
         res.status(201).send('');
     } catch (erro) {
@@ -16,8 +16,8 @@ controller.novo = async function (req, res) {
 
 controller.listar = async function (req, res) {
     try {
-        const conhecimentos = await Conhecimento.find();
-        res.send(conhecimentos);
+        const usuarios = await Usuario.find();
+        res.send(usuarios);
     } catch (erro) {
         console.error(erro);
         res.sendStatus(500).end(); //500 é erro interno do servidor
@@ -27,10 +27,10 @@ controller.listar = async function (req, res) {
 controller.obterUm = async function (req, res) {
     const id = req.params.id;
     try {
-        const conhecimento = await Conhecimento.findById(id);
-        if (conhecimento) { //conhecimento encontrada = variável preenchida
-            res.send(conhecimento);
-        } else { //conhecimento não encontrado = variável vazia
+        const usuario = await Usuario.findById(id);
+        if (usuario) { //usuario encontrada = variável preenchida
+            res.send(usuario);
+        } else { //usuario não encontrado = variável vazia
             res.sendStatus(404).end();
             //se a quantidade de posições for diferente ou tiver algum valor fora de hexadecimal ele retorna erro 500
         }
@@ -43,9 +43,9 @@ controller.obterUm = async function (req, res) {
 controller.atualizar = async function (req, res) {
     const id = req.body._id; //nome do campo vem com _ quando vem no body (corpo da requisição)
     try {
-        const conhecimento = await Conhecimento.findByIdAndUpdate(id, req.body);
+        const usuario = await Usuario.findByIdAndUpdate(id, req.body);
         //coloca na variável pra saber se houve alteração, caso não encontre então a variável fica vazia
-        if (conhecimento) {
+        if (usuario) {
             //http 204: no content, pois não há dados enviados APÓS A ALTERAÇÃO
             res.sendStatus(204).send();
         } else {
@@ -60,8 +60,8 @@ controller.atualizar = async function (req, res) {
 controller.excluir = async function (req, res){
     const id = req.body._id; //pegando id da requisição q está no body
     try{
-        const conhecimento = await Conhecimento.findByIdAndDelete(id);
-        if (conhecimento){
+        const usuario = await Usuario.findByIdAndDelete(id);
+        if (usuario){
             res.sendStatus(204).end(); //204 = no content, não há mais dados APÓS A EXCLUSÃO
         }else{
             res.sendStatus(404).end();

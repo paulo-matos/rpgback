@@ -16,7 +16,7 @@ controller.novo = async function (req, res) {
 
 controller.listar = async function (req, res) {
     try {
-        const fichas = await Ficha.find().populate('atributo').populate('habilidade').populate('detalhe');
+        const fichas = await Ficha.find();
         res.send(fichas);
     } catch (erro) {
         console.error(erro);
@@ -30,7 +30,7 @@ controller.obterUm = async function (req, res) {
         const ficha = await Ficha.findById(id);
         if (ficha) { //ficha encontrada = variável preenchida
             res.send(ficha);
-        } else { //ficha não encontrado = variável vazia
+        } else { //ficha não encontrada = variável vazia
             res.sendStatus(404).end();
             //se a quantidade de posições for diferente ou tiver algum valor fora de hexadecimal ele retorna erro 500
         }

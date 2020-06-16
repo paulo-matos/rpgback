@@ -1,6 +1,6 @@
 const express = require('express'); //express fornece o roteador que é necessário
 const router = express.Router();
-const controller = require('../controllers/conhecimento');
+const controller = require('../controllers/icone');
 
 router.post('/',controller.novo);
 router.get('/',controller.listar);
