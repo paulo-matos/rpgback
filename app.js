@@ -14,6 +14,8 @@ const livro = require('./routes/livro');
 const mapa = require('./routes/mapa');
 const usuario = require('./routes/usuario');
 
+//********* S3 upload *********
+const upload = require('./routes/file-upload');
 
 //********* Views *********
 //const livro = require('./routes/livro');
@@ -51,6 +53,8 @@ app.use('/livro', livro);
 app.use('/mapa', mapa);
 app.use('/usuario', usuario);
 
+//********* S3 upload *********
+app.use('/images', upload);
 
 //********* Views *********
 //app.use('/livro', livro);
