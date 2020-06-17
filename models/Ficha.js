@@ -302,9 +302,33 @@ const schema = mongoose.Schema({
         type: Number,
         default: 0
     },
-    vitalidade:{
-        type: Number,
-        default: 0
+    vitalidade1:{
+        type: String,
+        default: ""
+    },
+    vitalidade2:{
+        type: String,
+        default: ""
+    },
+    vitalidade3:{
+        type: String,
+        default: ""
+    },
+    vitalidade4:{
+        type: String,
+        default: ""
+    },
+    vitalidade5:{
+        type: String,
+        default: ""
+    },
+    vitalidade6:{
+        type: String,
+        default: ""
+    },
+    vitalidade7:{
+        type: String,
+        default: ""
     },
     pontos_experiencia:{
         type: Number,
