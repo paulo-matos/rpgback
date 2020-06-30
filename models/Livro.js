@@ -9,6 +9,10 @@ const schema = mongoose.Schema({
         ref: 'Usuario',
         required: true,
         default: '5ee85a7d8a6ed8196c1e0eff'
+    },
+    titulo:{
+        type: String,
+        required: true
     }
 });
 
