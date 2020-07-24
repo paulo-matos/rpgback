@@ -16,7 +16,7 @@ controller.novo = async function (req, res) {
 
 controller.listar = async function (req, res) {
     try {
-        const mapas = await Mapa.find().populate('icone');
+        const mapas = await Mapa.find().populate('idIcone');
         res.send(mapas);
     } catch (erro) {
         console.error(erro);
