@@ -27,7 +27,7 @@ controller.listar = async function (req, res) {
 controller.obterUm = async function (req, res) {
     const id = req.params.id;
     try {
-        const mapa = await Mapa.findById(id);
+        const mapa = await Mapa.findById(id).populate('idIcone');
         if (mapa) { //mapa encontrado = variável preenchida
             res.send(mapa);
         } else { //mapa não encontrado = variável vazia
