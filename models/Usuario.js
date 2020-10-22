@@ -6,6 +6,10 @@ const schema = mongoose.Schema({
     },
     senha: {
         type: String
+    },
+    ativo:{
+        type: Boolean,
+        default: false
     }
 });
 
